@@ -1,8 +1,13 @@
 package oms.pomelo.itides.daliy;
 
 import android.content.Context;
+import android.util.Log;
 
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
 import oms.pomelo.itides.base.BasePresenter;
+import oms.pomelo.itides.model.ShanBayResponse;
 import oms.pomelo.itides.presenter.BaseContract;
 import oms.pomelo.itides.utils.DataManager;
 import rx.Observer;
@@ -25,7 +30,6 @@ public class DailyInfoPresenter extends BasePresenter {
 
     @Override
     public void BindPresenterView(BaseContract baseContract) {
-//        super.BindPresenterView(baseContract);
         mDailyInfoContract = (DailyInfoContract) baseContract;
     }
 
@@ -33,7 +37,7 @@ public class DailyInfoPresenter extends BasePresenter {
         super.mCompositeSubscription.add(DataManager.getInstance(mContext).getDailyInfo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<DailyInfo>() {
+                .subscribe(new Observer<ShanBayResponse<DailyInfo>>() {
                     @Override
                     public void onCompleted() {
                         if (mDailyInfo != null) {
@@ -43,14 +47,16 @@ public class DailyInfoPresenter extends BasePresenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
-                        mDailyInfoContract.onError(e.getMessage());
+
                     }
 
                     @Override
-                    public void onNext(DailyInfo dailyInfo) {
-                        mDailyInfo = dailyInfo;
+                    public void onNext(ShanBayResponse<DailyInfo> dailyInfoShanBayResponse) {
+                        if (dailyInfoShanBayResponse.getMsg().equals("SUCCESS")) {
+                            mDailyInfo = dailyInfoShanBayResponse.getData();
+                        }
                     }
                 }));
+
     }
 }

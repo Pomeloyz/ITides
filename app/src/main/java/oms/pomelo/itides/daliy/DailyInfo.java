@@ -1,5 +1,7 @@
 package oms.pomelo.itides.daliy;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -17,12 +19,19 @@ public class DailyInfo {
      * translation : 守不住的承诺就别说。
      */
 
+    @SerializedName("id")
     private String id;
+    @SerializedName("author")
     private String author;
+    @SerializedName("content")
     private String content;
+    @SerializedName("assign_date")
     private String assign_date;
+    @SerializedName("share_url")
     private String share_url;
+    @SerializedName("translation")
     private String translation;
+    @SerializedName("origin_img_urls")
     private List<String> origin_img_urls;
 
     public String getId() {

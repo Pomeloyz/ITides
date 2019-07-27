@@ -1,5 +1,6 @@
 package oms.pomelo.itides.daliy;
 
+import oms.pomelo.itides.model.ShanBayResponse;
 import oms.pomelo.itides.presenter.BaseContract;
 
 /**
