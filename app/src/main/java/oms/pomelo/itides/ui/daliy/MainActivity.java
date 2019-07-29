@@ -1,31 +1,20 @@
-package oms.pomelo.itides.ui.activity;
+package oms.pomelo.itides.ui.daliy;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.Calendar;
 
-import okhttp3.ResponseBody;
 import oms.pomelo.itides.R;
-import oms.pomelo.itides.daliy.DailyInfo;
-import oms.pomelo.itides.daliy.DailyInfoContract;
-import oms.pomelo.itides.daliy.DailyInfoPresenter;
-import oms.pomelo.itides.model.ShanBayResponse;
+import oms.pomelo.itides.model.DailyInfo;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,10 +43,7 @@ public class MainActivity extends AppCompatActivity {
         tvTips = findViewById(R.id.tvTips);
 
         mDailyInfoPresenter = new DailyInfoPresenter(this);
-        mDailyInfoPresenter.init();
-        mDailyInfoPresenter.BindPresenterView(mDailyInfoContract);
-
-        mCalendar = Calendar.getInstance();
+        mDailyInfoPresenter.bindPresenterView(mDailyInfoContract);
     }
 
     private void initListener() {
@@ -65,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        mCalendar = Calendar.getInstance();
+
         int hour = mCalendar.get(Calendar.HOUR_OF_DAY);
         if (hour > 6 && hour < 11) {
             tvTips.setText("早上好");

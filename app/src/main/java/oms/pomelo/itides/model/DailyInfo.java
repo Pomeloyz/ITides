@@ -1,4 +1,4 @@
-package oms.pomelo.itides.daliy;
+package oms.pomelo.itides.model;
 
 import com.google.gson.annotations.SerializedName;
 

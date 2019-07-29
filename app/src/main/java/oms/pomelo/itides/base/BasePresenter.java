@@ -1,14 +1,12 @@
 package oms.pomelo.itides.base;
 
-import oms.pomelo.itides.presenter.BaseContract;
-import oms.pomelo.itides.presenter.Presenter;
 import rx.subscriptions.CompositeSubscription;
 
 /**
  * NAME: Sherry
  * DATE: 2019-07-28
  */
-public class BasePresenter implements Presenter {
+public abstract class BasePresenter<T extends BaseContract> implements Presenter {
 
     //使用protected修饰符，便于子类进行调用
     protected CompositeSubscription mCompositeSubscription;
@@ -26,8 +24,7 @@ public class BasePresenter implements Presenter {
         }
     }
 
-    @Override
-    public void BindPresenterView(BaseContract presentView) {
-        //与具体视图进行绑定
-    }
+    //与具体视图进行绑定
+    public abstract void bindPresenterView(T presentView);
+
 }

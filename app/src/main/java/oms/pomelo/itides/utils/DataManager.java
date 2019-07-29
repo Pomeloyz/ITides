@@ -2,9 +2,8 @@ package oms.pomelo.itides.utils;
 
 import android.content.Context;
 
-import okhttp3.ResponseBody;
 import oms.pomelo.itides.api.ApiService;
-import oms.pomelo.itides.daliy.DailyInfo;
+import oms.pomelo.itides.model.DailyInfo;
 import oms.pomelo.itides.model.ShanBayResponse;
 import rx.Observable;
 
@@ -14,24 +13,24 @@ import rx.Observable;
  * 该类用来管理ApiService中对应的各种API接口，
  * 当做Retrofit和presenter中的桥梁，Activity就不用直接和retrofit打交道了
  */
-public class DataManager {
+public final class DataManager {
 
     private ApiService apiService;
-    private volatile static DataManager instance;
+    private volatile static DataManager sInstance;
 
     private DataManager(Context context) {
         this.apiService = RetrofitUtil.getInstance(context).getApiService();
     }
 
     public static DataManager getInstance(Context context) {
-        if (instance == null) {
+        if (sInstance == null) {
             synchronized (DataManager.class) {
-                if (instance == null) {
-                    instance = new DataManager(context);
+                if (sInstance == null) {
+                    sInstance = new DataManager(context);
                 }
             }
         }
-        return instance;
+        return sInstance;
     }
 
     //将retrofit的业务方法映射到DataManager中，以后统一用该类来调用业务方法

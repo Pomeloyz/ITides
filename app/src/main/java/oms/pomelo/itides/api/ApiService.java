@@ -1,9 +1,7 @@
 package oms.pomelo.itides.api;
 
-import okhttp3.ResponseBody;
-import oms.pomelo.itides.daliy.DailyInfo;
+import oms.pomelo.itides.model.DailyInfo;
 import oms.pomelo.itides.model.ShanBayResponse;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import rx.Observable;
 

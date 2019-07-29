@@ -1,7 +1,7 @@
-package oms.pomelo.itides.daliy;
+package oms.pomelo.itides.ui.daliy;
 
-import oms.pomelo.itides.model.ShanBayResponse;
-import oms.pomelo.itides.presenter.BaseContract;
+import oms.pomelo.itides.base.BaseContract;
+import oms.pomelo.itides.model.DailyInfo;
 
 /**
  * NAME: Sherry

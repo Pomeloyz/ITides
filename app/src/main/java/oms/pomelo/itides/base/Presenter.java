@@ -1,4 +1,4 @@
-package oms.pomelo.itides.presenter;
+package oms.pomelo.itides.base;
 
 /**
  * NAME: Sherry
@@ -10,7 +10,5 @@ public interface Presenter {
     void init();
 
     void release();
-
-    void BindPresenterView(BaseContract baseContract); //绑定视图
 
 }

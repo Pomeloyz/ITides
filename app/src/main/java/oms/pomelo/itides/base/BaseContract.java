@@ -1,4 +1,4 @@
-package oms.pomelo.itides.presenter;
+package oms.pomelo.itides.base;
 
 /**
  * NAME: Sherry

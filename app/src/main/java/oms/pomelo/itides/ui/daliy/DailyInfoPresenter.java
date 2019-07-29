@@ -1,14 +1,10 @@
-package oms.pomelo.itides.daliy;
+package oms.pomelo.itides.ui.daliy;
 
 import android.content.Context;
-import android.util.Log;
 
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
 import oms.pomelo.itides.base.BasePresenter;
+import oms.pomelo.itides.model.DailyInfo;
 import oms.pomelo.itides.model.ShanBayResponse;
-import oms.pomelo.itides.presenter.BaseContract;
 import oms.pomelo.itides.utils.DataManager;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -18,7 +14,7 @@ import rx.schedulers.Schedulers;
  * NAME: Sherry
  * DATE: 2019-07-28
  */
-public class DailyInfoPresenter extends BasePresenter {
+public class DailyInfoPresenter extends BasePresenter<DailyInfoContract> {
 
     private Context mContext;
     private DailyInfo mDailyInfo;
@@ -26,11 +22,12 @@ public class DailyInfoPresenter extends BasePresenter {
 
     public DailyInfoPresenter(Context mContext) {
         this.mContext = mContext;
+        init();
     }
 
     @Override
-    public void BindPresenterView(BaseContract baseContract) {
-        mDailyInfoContract = (DailyInfoContract) baseContract;
+    public void bindPresenterView(DailyInfoContract baseContract) {
+        mDailyInfoContract = baseContract;
     }
 
     public void getDailyInfo() {

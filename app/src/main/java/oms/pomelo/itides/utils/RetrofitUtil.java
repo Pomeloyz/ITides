@@ -2,8 +2,6 @@ package oms.pomelo.itides.utils;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-
 import okhttp3.OkHttpClient;
 import oms.pomelo.itides.api.ApiService;
 import retrofit2.Retrofit;
@@ -14,44 +12,43 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * NAME: Sherry
  * DATE: 2019-07-27
  */
-public class RetrofitUtil {
+public final class RetrofitUtil {
 
     private Context mContext;
-    private ApiService apiService;
-    private Retrofit mRetrofit;
-    OkHttpClient client = new OkHttpClient();
-    GsonConverterFactory factory = GsonConverterFactory.create();
+    private ApiService mApiService;
+    private OkHttpClient mClient = new OkHttpClient();
+    private GsonConverterFactory mFactory = GsonConverterFactory.create();
 
-    private volatile static RetrofitUtil instance;
+    private volatile static RetrofitUtil sInstance;
 
     //使用单例模式获取该对象
     public static RetrofitUtil getInstance(Context context) {
-        if (instance == null) {
+        if (sInstance == null) {
             synchronized (RetrofitUtil.class) {
-                if (instance == null) {
-                    instance = new RetrofitUtil(context);
+                if (sInstance == null) {
+                    sInstance = new RetrofitUtil(context);
                 }
             }
         }
-        return instance;
+        return sInstance;
     }
 
-    public RetrofitUtil(Context context) {
+    private RetrofitUtil(Context context) {
         mContext = context;
         initRetrofit();
     }
 
     private void initRetrofit() {
-        mRetrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
-                .client(client)
-                .addConverterFactory(factory)
+                .client(mClient)
+                .addConverterFactory(mFactory)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
-        apiService = mRetrofit.create(ApiService.class);
+        mApiService = retrofit.create(ApiService.class);
     }
 
     public ApiService getApiService(){
-        return apiService;
+        return mApiService;
     }
 }

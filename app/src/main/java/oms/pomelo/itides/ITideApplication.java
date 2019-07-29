@@ -1,4 +1,4 @@
-package oms.pomelo.itides.base;
+package oms.pomelo.itides;
 
 import android.app.Application;
 
