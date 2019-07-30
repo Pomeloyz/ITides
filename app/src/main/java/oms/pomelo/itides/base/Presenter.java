@@ -1,14 +1,14 @@
 package oms.pomelo.itides.base;
 
+
 /**
  * NAME: Sherry
- * DATE: 2019-07-28
- * BasePresenter继承该Presenter
+ * DATE: 2019-07-30
  */
-public interface Presenter {
+public interface Presenter<T extends BaseMvpView> {
 
-    void init();
+    void attachView(T mvpView);
 
-    void release();
+    void detachView();
 
 }

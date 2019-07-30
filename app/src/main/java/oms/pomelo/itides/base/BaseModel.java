@@ -1,8 +1,14 @@
-package oms.pomelo.itides.model;
+package oms.pomelo.itides.base;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ShanBayResponse<T> {
+/**
+ * NAME: Sherry
+ * DATE: 2019-07-30
+ * 接口回调基类
+ */
+public class BaseModel<T> {
+
     @SerializedName("msg")
     private String msg;
     @SerializedName("status_code")
@@ -10,7 +16,7 @@ public class ShanBayResponse<T> {
     @SerializedName("data")
     private T data;
 
-    public ShanBayResponse(String msg, int statusCode, T data) {
+    public BaseModel(String msg, int statusCode, T data) {
         this.msg = msg;
         this.statusCode = statusCode;
         this.data = data;
@@ -39,4 +45,5 @@ public class ShanBayResponse<T> {
     public void setData(T data) {
         this.data = data;
     }
+
 }

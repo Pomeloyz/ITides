@@ -3,8 +3,8 @@ package oms.pomelo.itides.utils;
 import android.content.Context;
 
 import oms.pomelo.itides.api.ApiService;
-import oms.pomelo.itides.model.DailyInfo;
-import oms.pomelo.itides.model.ShanBayResponse;
+import oms.pomelo.itides.ui.daliy.DailyInfo;
+import oms.pomelo.itides.base.BaseModel;
 import rx.Observable;
 
 /**
@@ -34,7 +34,7 @@ public final class DataManager {
     }
 
     //将retrofit的业务方法映射到DataManager中，以后统一用该类来调用业务方法
-    public Observable<ShanBayResponse<DailyInfo>> getDailyInfo() {
+    public Observable<BaseModel<DailyInfo>> getDailyInfo() {
         return apiService.getDailyInfo();
     }
 

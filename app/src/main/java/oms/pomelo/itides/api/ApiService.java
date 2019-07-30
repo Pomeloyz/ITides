@@ -1,7 +1,7 @@
 package oms.pomelo.itides.api;
 
-import oms.pomelo.itides.model.DailyInfo;
-import oms.pomelo.itides.model.ShanBayResponse;
+import oms.pomelo.itides.ui.daliy.DailyInfo;
+import oms.pomelo.itides.base.BaseModel;
 import retrofit2.http.GET;
 import rx.Observable;
 
@@ -12,6 +12,6 @@ import rx.Observable;
 public interface ApiService {
 
     @GET("api/v2/quote/quotes/today/")
-    Observable<ShanBayResponse<DailyInfo>> getDailyInfo();
+    Observable<BaseModel<DailyInfo>> getDailyInfo();
 
 }

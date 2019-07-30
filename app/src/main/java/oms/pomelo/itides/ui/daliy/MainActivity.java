@@ -14,15 +14,14 @@ import com.bumptech.glide.Glide;
 import java.util.Calendar;
 
 import oms.pomelo.itides.R;
-import oms.pomelo.itides.model.DailyInfo;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DailyContract.DailyView {
 
-    private DailyInfoPresenter mDailyInfoPresenter;
     private ImageView ivDailyBg;
     private TextView tvDaily;
     private TextView tvTips;
     private Calendar mCalendar;
+    private DailyPresenter mDailyPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initView();
-        initListener();
+        initPresenter();
         initData();
     }
 
@@ -41,13 +40,12 @@ public class MainActivity extends AppCompatActivity {
         ivDailyBg = findViewById(R.id.ivDailyBg);
         tvDaily = findViewById(R.id.tvDaily);
         tvTips = findViewById(R.id.tvTips);
-
-        mDailyInfoPresenter = new DailyInfoPresenter(this);
-        mDailyInfoPresenter.bindPresenterView(mDailyInfoContract);
     }
 
-    private void initListener() {
-        mDailyInfoPresenter.getDailyInfo();
+    private void initPresenter() {
+        mDailyPresenter = new DailyPresenter(this);
+        mDailyPresenter.attachView(this);
+        mDailyPresenter.getDaily();
     }
 
     private void initData() {
@@ -67,23 +65,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private DailyInfoContract mDailyInfoContract = new DailyInfoContract() {
-
-        @Override
-        public void onSuccess(DailyInfo dailyInfo) {
-            Glide.with(MainActivity.this).load(dailyInfo.getOrigin_img_urls().get(0)).into(ivDailyBg);
-            tvDaily.setText(dailyInfo.getContent());
-        }
-
-        @Override
-        public void onError(String result) {
-            Toast.makeText(MainActivity.this, result, Toast.LENGTH_SHORT).show();
-        }
-    };
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mDailyInfoPresenter.release();
+        mDailyPresenter.detachView();
+    }
+
+    @Override
+    public void getDailySuccess(DailyInfo dailyInfo) {
+        Glide.with(MainActivity.this).load(dailyInfo.getOrigin_img_urls().get(0)).into(ivDailyBg);
+        tvDaily.setText(dailyInfo.getTranslation());
+    }
+
+    @Override
+    public void getDailyError(String result) {
+        Toast.makeText(MainActivity.this, result, Toast.LENGTH_SHORT).show();
     }
 }
