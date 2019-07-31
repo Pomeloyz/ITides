@@ -1,19 +1,19 @@
 package oms.pomelo.itides.ui.daliy;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
 import java.util.Calendar;
 
 import oms.pomelo.itides.R;
+import oms.pomelo.itides.utils.StatusBarUtil;
 
 public class MainActivity extends AppCompatActivity implements DailyContract.DailyView {
 
@@ -22,21 +22,23 @@ public class MainActivity extends AppCompatActivity implements DailyContract.Dai
     private TextView tvTips;
     private Calendar mCalendar;
     private DailyPresenter mDailyPresenter;
+    private LinearLayout mContentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
         initView();
         initPresenter();
         initData();
+
+        StatusBarUtil.setTransparentForImageView(this, mContentView);
     }
 
     private void initView() {
+        mContentView = findViewById(R.id.ll_content_view);
         ivDailyBg = findViewById(R.id.ivDailyBg);
         tvDaily = findViewById(R.id.tvDaily);
         tvTips = findViewById(R.id.tvTips);

@@ -11,12 +11,13 @@
         android:scaleType="fitXY" />
 
     <LinearLayout
+        android:id="@+id/ll_content_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="50dp"
         android:padding="15dp"
-        android:layout_marginLeft="15dp">
+        android:layout_marginStart="15dp">
 
         <TextView
             android:id="@+id/tvTips"
