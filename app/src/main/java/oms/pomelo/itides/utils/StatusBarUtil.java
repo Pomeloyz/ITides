@@ -92,7 +92,9 @@ public class StatusBarUtil {
         if (needOffsetView != null) {
             ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) needOffsetView.getLayoutParams();
             if (layoutParams != null) {
-                layoutParams.setMargins(0, getStatusBarHeight(activity), 0, 0);
+                layoutParams.setMargins(layoutParams.leftMargin,
+                        layoutParams.topMargin + getStatusBarHeight(activity),
+                        layoutParams.rightMargin, layoutParams.bottomMargin);
             }
         }
     }
