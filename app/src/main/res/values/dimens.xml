@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="default_toolbar_height">48dp</dimen>
+
+    <dimen name="default_putting_child_item_title">50sp</dimen>
+    <dimen name="default_putting_child_item_time">14sp</dimen>
+</resources>

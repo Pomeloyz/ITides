@@ -1,11 +1,14 @@
 package oms.pomelo.itides.ui.daliy;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -13,6 +16,10 @@ import com.bumptech.glide.Glide;
 import java.util.Calendar;
 
 import oms.pomelo.itides.R;
+import oms.pomelo.itides.ui.pudding.BreathActivity;
+import oms.pomelo.itides.ui.pudding.FocusActivity;
+import oms.pomelo.itides.ui.pudding.RelaxActivity;
+import oms.pomelo.itides.ui.pudding.SleepActivity;
 import oms.pomelo.itides.utils.StatusBarUtil;
 
 public class MainActivity extends AppCompatActivity implements DailyContract.DailyView {
@@ -23,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements DailyContract.Dai
     private Calendar mCalendar;
     private DailyPresenter mDailyPresenter;
     private LinearLayout mContentView;
+
+    private static final int REQUEST_CODE = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,5 +91,39 @@ public class MainActivity extends AppCompatActivity implements DailyContract.Dai
     @Override
     public void getDailyError(String result) {
         Toast.makeText(MainActivity.this, result, Toast.LENGTH_SHORT).show();
+    }
+
+    public void toFocus(View view) {
+        hideUI();
+        FocusActivity.start(MainActivity.this, REQUEST_CODE);
+    }
+
+    public void toSleep(View view) {
+        hideUI();
+        SleepActivity.start(MainActivity.this, REQUEST_CODE);
+    }
+
+    public void toRelax(View view) {
+        hideUI();
+        RelaxActivity.start(MainActivity.this, REQUEST_CODE);
+    }
+
+    public void toBreath(View view) {
+        hideUI();
+        BreathActivity.start(MainActivity.this, REQUEST_CODE);
+    }
+
+    private void hideUI() {
+        // TODO use animation
+        findViewById(R.id.ll_content_view).setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            // TODO use animation
+            findViewById(R.id.ll_content_view).setVisibility(View.VISIBLE);
+        }
     }
 }

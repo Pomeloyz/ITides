@@ -3,7 +3,7 @@
     package="oms.pomelo.itides">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".ITideApplication"
@@ -19,7 +19,23 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="github.com"
+                    android:pathPattern="/Pomeloyz/ITides" />
+            </intent-filter>
         </activity>
+        <activity android:name=".ui.pudding.FocusActivity" />
+        <activity android:name=".ui.pudding.SleepActivity"
+            android:theme="@style/TransparentTheme" />
+        <activity android:name=".ui.pudding.RelaxActivity" />
+        <activity android:name=".ui.pudding.BreathActivity" />
     </application>
 
 </manifest>
