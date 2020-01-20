@@ -40,25 +40,25 @@ public class BasePagerContainerView extends LinearLayout {
         addView(view);
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                startX = (int) event.getRawX();
-                startY = (int) event.getRawY();
-
-            case MotionEvent.ACTION_MOVE:
-                int dX = (int) (event.getRawX() - startX);
-                int dY = (int) (event.getRawY() - startY);
-                if (Math.abs(dX) < Math.abs(dY)) { //上下滑动
-                    return true;
-                } else { //左右滑动
-                    return false;
-                }
-
-            case MotionEvent.ACTION_UP:
-                break;
-        }
-        return super.onInterceptTouchEvent(event);
-    }
+//    @Override
+//    public boolean onInterceptTouchEvent(MotionEvent event) {
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                startX = (int) event.getRawX();
+//                startY = (int) event.getRawY();
+//
+//            case MotionEvent.ACTION_MOVE:
+//                int dX = (int) (event.getRawX() - startX);
+//                int dY = (int) (event.getRawY() - startY);
+//                if (Math.abs(dX) < Math.abs(dY)) { //上下滑动
+//                    return true;
+//                } else { //左右滑动
+//                    return false;
+//                }
+//
+//            case MotionEvent.ACTION_UP:
+//                break;
+//        }
+//        return super.onInterceptTouchEvent(event);
+//    }
 }

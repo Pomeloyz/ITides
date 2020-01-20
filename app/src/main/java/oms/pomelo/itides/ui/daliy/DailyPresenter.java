@@ -23,14 +23,16 @@ public class DailyPresenter extends DailyContract.Presenter {
 
     @Override
     public void getDaily() {
-        super.mCompositeSubscription.add(DataManager.getInstance(mContext).getDailyInfo()
+        super.mCompositeSubscription.add(DataManager.getInstance(mContext).getDailyPics("2020-01-20")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BaseModel<DailyInfo>>() {
+                .subscribe(new Observer<DailyInfo>() {
                     @Override
                     public void onCompleted() {
-                        if (mDailyInfo != null) {
+                        if (mDailyInfo != null && mDailyInfo.getCode() == 0) {
                             getMvpView().getDailySuccess(mDailyInfo);
+                        } else if (mDailyInfo != null){
+                            getMvpView().getDailyError(mDailyInfo.getMsg());
                         }
                     }
 
@@ -40,10 +42,8 @@ public class DailyPresenter extends DailyContract.Presenter {
                     }
 
                     @Override
-                    public void onNext(BaseModel<DailyInfo> dailyInfoBaseModel) {
-                        if (dailyInfoBaseModel.getMsg().equals("SUCCESS")) {
-                            mDailyInfo = dailyInfoBaseModel.getData();
-                        }
+                    public void onNext(DailyInfo dailyInfo) {
+                        mDailyInfo = dailyInfo;
                     }
                 }));
     }

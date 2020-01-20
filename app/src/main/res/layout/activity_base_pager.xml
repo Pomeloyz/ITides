@@ -4,29 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/layout_scenes_list" />
-
-    <FrameLayout
-        android:id="@+id/fl_base_pager_root_view"
+    <oms.pomelo.module.slidingpanel.SlidingUpPanelLayout
+        android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:gravity="bottom"
+        app:initialState="expanded">
 
-    <oms.pomelo.itides.ui.view.BasePagerContainerView
-        android:id="@+id/container_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <include layout="@layout/layout_scenes_list" />
 
-    <oms.pomelo.itides.ui.view.RelaxMorePagerView
-        android:id="@+id/relax_more_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent" />
+        <oms.pomelo.itides.ui.view.BasePagerContainerView
+            android:id="@+id/base_container_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </oms.pomelo.module.slidingpanel.SlidingUpPanelLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

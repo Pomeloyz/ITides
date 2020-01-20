@@ -2,9 +2,11 @@ package oms.pomelo.itides.utils;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import oms.pomelo.itides.api.ApiService;
-import oms.pomelo.itides.ui.daliy.DailyInfo;
 import oms.pomelo.itides.base.BaseModel;
+import oms.pomelo.itides.ui.daliy.DailyInfo;
 import rx.Observable;
 
 /**
@@ -34,8 +36,12 @@ public final class DataManager {
     }
 
     //将retrofit的业务方法映射到DataManager中，以后统一用该类来调用业务方法
-    public Observable<BaseModel<DailyInfo>> getDailyInfo() {
-        return apiService.getDailyInfo();
+    public Observable<BaseModel<Object>> getDailyPics(@NonNull String from, @NonNull String to) {
+        return apiService.getDailyPics(from, to);
+    }
+
+    public Observable<DailyInfo> getDailyPics(@NonNull String date) {
+        return apiService.getDailyPics(date);
     }
 
 }

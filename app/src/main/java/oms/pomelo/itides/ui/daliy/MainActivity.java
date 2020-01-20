@@ -84,8 +84,9 @@ public class MainActivity extends AppCompatActivity implements DailyContract.Dai
 
     @Override
     public void getDailySuccess(DailyInfo dailyInfo) {
-        Glide.with(MainActivity.this).load(dailyInfo.getOrigin_img_urls().get(0)).into(ivDailyBg);
-        tvDaily.setText(dailyInfo.getTranslation());
+        Glide.with(MainActivity.this).load(dailyInfo.getPic_url()).into(ivDailyBg);
+        DailyInfo.ContentBean content = dailyInfo.getContent();
+        tvDaily.setText(content.getZhHans().getQuote().getText());
     }
 
     @Override

@@ -6,6 +6,6 @@ package oms.pomelo.itides.utils;
  */
 public class Constants {
 
-    public static final String BASE_URL = "https://rest.shanbay.com/";
+    public static final String BASE_URL = "https://tide-api.moreless.io/";
 
 }
