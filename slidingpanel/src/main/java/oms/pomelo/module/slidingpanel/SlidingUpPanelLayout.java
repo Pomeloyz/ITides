@@ -189,12 +189,13 @@ public class SlidingUpPanelLayout extends ViewGroup {
             mPanelHeight = (int) (DEFAULT_PANEL_HEIGHT * density + 0.5f);
         }
 
-        //FIXME ViewGroup默认不执行onDraw()方法，不需要重写onDraw，为何设置false
         setWillNotDraw(false);
 
         mDragHelper = ViewDragHelper.create(this, 0.5f, new DragHelperCallback());
         // TODO 改为可设置
         mDragHelper.setMinVelocity(400 * density);
+
+        mIsTouchEnabled = true;
     }
 
     public void setGravity(int gravity) {
@@ -256,6 +257,27 @@ public class SlidingUpPanelLayout extends ViewGroup {
         synchronized (mPanelSlideListeners) {
             mPanelSlideListeners.remove(listener);
         }
+    }
+
+    void setAllChildrenVisible() {
+        for (int i = 0, childCount = getChildCount(); i < childCount; i++) {
+            final View child = getChildAt(i);
+            if (child.getVisibility() == INVISIBLE) {
+                child.setVisibility(VISIBLE);
+            }
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mFirstLayout = true;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mFirstLayout = true;
     }
 
     @Override
@@ -640,6 +662,18 @@ public class SlidingUpPanelLayout extends ViewGroup {
         return false;
     }
 
+    @Override
+    public void computeScroll() {
+        if (mDragHelper != null && mDragHelper.continueSettling(true)) {
+            if (!isEnabled()) {
+                mDragHelper.abort();
+                return;
+            }
+
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
+    }
+
     /**
      * 根据 slideOffset 计算滑动面板的顶部位置
      */
@@ -709,13 +743,48 @@ public class SlidingUpPanelLayout extends ViewGroup {
             invalidate();
         }
 
+        @Override
+        public void onViewCaptured(@NonNull View capturedChild, int activePointerId) {
+            setAllChildrenVisible();
+        }
+
         /**
          * 手指释放时回调
          */
         @Override
         public void onViewReleased(@NonNull View releasedChild, float xvel, float yvel) {
-            super.onViewReleased(releasedChild, xvel, yvel);
-            // TODO
+            int target = 0;
+
+            // 根据初始状态的不同，将趋向目标方向的y值转为正数
+            float direction = mIsSlidingUp ? -yvel : yvel;
+
+            if (direction > 0 && mSlideOffset <= mAnchorPoint) {
+                // 上拉 -> 展开并停在锚点
+                target = computePanelTopPosition(mAnchorPoint);
+            } else if (direction > 0 && mSlideOffset > mAnchorPoint) {
+                // 上拉超过锚点 -> 完全展开
+                target = computePanelTopPosition(1.0f);
+            } else if (direction < 0 && mSlideOffset >= mAnchorPoint) {
+                // 下拉 -> 收起并停在锚点
+                target = computePanelTopPosition(mAnchorPoint);
+            } else if (direction < 0 && mSlideOffset < mAnchorPoint) {
+                // 下拉超过锚点 -> 收起
+                target = computePanelTopPosition(0.0f);
+            } else if (mSlideOffset >= (1.f + mAnchorPoint) / 2) {
+                // 速度为0，且离锚点足够远 => 展开
+                target = computePanelTopPosition(1.0f);
+            } else if (mSlideOffset >= mAnchorPoint / 2) {
+                // 速度为0，且离锚点很近 => 停在锚点
+                target = computePanelTopPosition(mAnchorPoint);
+            } else {
+                // 停在底部
+                target = computePanelTopPosition(0.0f);
+            }
+
+            if (mDragHelper != null) {
+                mDragHelper.settleCapturedViewAt(releasedChild.getLeft(), target);
+            }
+            invalidate();
         }
 
         @Override
