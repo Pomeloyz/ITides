@@ -1,8 +1,10 @@
 package oms.pomelo.itides.ui.daliy;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 
-import oms.pomelo.itides.base.BaseModel;
+import java.util.Calendar;
+
 import oms.pomelo.itides.utils.DataManager;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -23,7 +25,8 @@ public class DailyPresenter extends DailyContract.Presenter {
 
     @Override
     public void getDaily() {
-        super.mCompositeSubscription.add(DataManager.getInstance(mContext).getDailyPics("2020-01-20")
+        String date = DateFormat.format("yyyy-MM-dd", Calendar.getInstance()).toString();
+        super.mCompositeSubscription.add(DataManager.getInstance(mContext).getDailyPics(date)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<DailyInfo>() {

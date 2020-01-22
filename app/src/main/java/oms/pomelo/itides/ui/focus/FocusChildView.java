@@ -1,13 +1,13 @@
 package oms.pomelo.itides.ui.focus;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -46,5 +46,10 @@ public class FocusChildView extends LinearLayout {
         textView.setText(text);
 
         return this;
+    }
+
+    public void setBackgroundColor(@ColorInt int color) {
+        View view = rootView.findViewById(R.id.cl_focus_item_root_view);
+        view.setBackgroundColor(color);
     }
 }

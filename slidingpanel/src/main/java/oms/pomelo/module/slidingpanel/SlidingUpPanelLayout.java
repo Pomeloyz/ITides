@@ -29,11 +29,21 @@ public class SlidingUpPanelLayout extends ViewGroup {
      */
     private static final int DEFAULT_PANEL_HEIGHT = 70; // dp;
     /**
+     * 认定为速滑的最小速度
+     */
+    private static final int DEFAULT_MIN_FLING_VELOCITY = 400; // dips per second
+    /**
      * 默认可设置的attrs
      */
     private static final int[] DEFAULT_ATTRS = new int[] {
             android.R.attr.gravity
     };
+
+    /**
+     * 认定为速滑的最小速度
+     */
+    private int mMinFlingVelocity = DEFAULT_MIN_FLING_VELOCITY;
+
     /**
      * 滑动面板默认<b>不</b>覆盖 Window
      */
@@ -138,17 +148,15 @@ public class SlidingUpPanelLayout extends ViewGroup {
      */
     public interface PanelSlideListener {
         /**
-         * Called when a sliding pane's position changes.
+         * 面板滑动时回调
          *
-         * @param panel       The child view that was moved
-         * @param slideOffset The new offset of this sliding pane within its range, from 0-1
+         * @param panel       滑动面板View
+         * @param slideOffset 滑动面板的新 slideOffset 值，[0 ~ 1]
          */
         public void onPanelSlide(View panel, float slideOffset);
 
         /**
-         * Called when a sliding panel state changes
-         *
-         * @param panel The child view that was slid to an collapsed position
+         * 滑动面板状态更改时调用
          */
         public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState);
     }
@@ -189,11 +197,8 @@ public class SlidingUpPanelLayout extends ViewGroup {
             mPanelHeight = (int) (DEFAULT_PANEL_HEIGHT * density + 0.5f);
         }
 
-        setWillNotDraw(false);
-
         mDragHelper = ViewDragHelper.create(this, 0.5f, new DragHelperCallback());
-        // TODO 改为可设置
-        mDragHelper.setMinVelocity(400 * density);
+        mDragHelper.setMinVelocity(mMinFlingVelocity * density);
 
         mIsTouchEnabled = true;
     }
@@ -206,6 +211,34 @@ public class SlidingUpPanelLayout extends ViewGroup {
         if (!mFirstLayout) {
             requestLayout();
         }
+    }
+
+    /**
+     * 设置滑动启用标志
+     */
+    public void setTouchEnabled(boolean enabled) {
+        mIsTouchEnabled = enabled;
+    }
+
+    /**
+     * 设置滑动面板初始状态露出的尺寸(pixels)
+     */
+    public void setPanelHeight(int pixels) {
+        if (getPanelHeight() == pixels) return;
+
+        mPanelHeight = pixels;
+        if (!mFirstLayout) {
+            requestLayout();
+        }
+
+        if (getPanelState() == PanelState.COLLAPSED) {
+            smoothSlideTo(0, 0); //to Bottom
+            invalidate();
+        }
+    }
+
+    public int getPanelHeight() {
+        return mPanelHeight;
     }
 
     public void setDragView(View dragView) {
@@ -306,7 +339,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
             setDragView(mSlideableView);
         }
 
-        // TODO If the sliding panel is not visible, then put the whole view in the hidden state
         if (mSlideableView.getVisibility() != VISIBLE) {
             mSlideState = PanelState.HIDDEN;
         }
@@ -392,7 +424,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
             View child = getChildAt(i);
             LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
-            // FIXME Always layout the sliding view on the first layout
             if (child.getVisibility() == GONE && (i == 0 || mFirstLayout)) {
                 continue;
             }
@@ -415,11 +446,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
 
             child.layout(childLeft, childTop, childRight, childBottom);
         }
-
-        if (mFirstLayout) {
-            // TODO updateObscuredViewVisibility();
-        }
-        // TODO applyParallaxForCurrentSlideOffset();
 
         mFirstLayout = false;
     }
@@ -452,7 +478,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
 
             case MotionEvent.ACTION_MOVE:
                 // 不拦截左右滑动
-                if (ady > dragSlop && adx > ady) {
+                if (ady > dragSlop && adx > ady) {  // TODO 对于斜率小于45°和大于135°的手势，应视为左右滑动
                     mDragHelper.cancel();
                     mIsUnableToDrag = true;
                     return false;
@@ -466,7 +492,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
                     mDragHelper.processTouchEvent(ev);
                     return true;
                 }
-                // TODO 必要的注释
+                // 在滑动面板收起的情况下，若mFadeOnClickListener不为空，在这里调用点击"主页面"事件
                 if (ady <= dragSlop && adx <= dragSlop
                         && mSlideOffset > 0
                         && !isViewUnder(mSlideableView, (int) mInitialMotionX, (int) mInitialMotionY)
@@ -522,26 +548,30 @@ public class SlidingUpPanelLayout extends ViewGroup {
             if (dy * (mIsSlidingUp ? 1 : -1) > 0) { //收起
                 // TODO 先处理 mScrollableView 的情况
 
-                // TODO 必要的注释
+                // 判断滑动面板内是否之前接收到并正在处理事件
                 if (mIsScrollableViewHandlingTouch) {
+                    // 发送Up事件到子View
                     MotionEvent up = MotionEvent.obtain(ev);
                     up.setAction(MotionEvent.ACTION_CANCEL);
                     super.dispatchTouchEvent(up);
                     up.recycle();
 
+                    // 发送Down事件到dragPanel
                     ev.setAction(MotionEvent.ACTION_DOWN);
                 }
                 mIsScrollableViewHandlingTouch = false;
                 return this.onTouchEvent(ev);
 
             } else if (dy * (mIsSlidingUp ? 1 : -1) < 0) { //展开
+                // 如果滑动面板不处于完全展开状态，在这里传递事件到dragPanel处理
                 if (mSlideOffset < 1.0f) {
                     mIsScrollableViewHandlingTouch = false;
                     return this.onTouchEvent(ev);
                 }
-                // TODO 必要的注释
+                // 判断滑动面板内是否之前接收到并正在处理事件
                 if (!mIsScrollableViewHandlingTouch && mDragHelper.getViewDragState() == ViewDragHelper.STATE_DRAGGING) {
                     mDragHelper.cancel();
+                    // 发送Down事件到dragPanel
                     ev.setAction(MotionEvent.ACTION_DOWN);
                 }
 
@@ -581,6 +611,10 @@ public class SlidingUpPanelLayout extends ViewGroup {
                 && screenX < viewLocation[0] + view.getWidth()
                 && screenY >= viewLocation[1]
                 && screenY < viewLocation[1] + view.getHeight();
+    }
+
+    public PanelState getPanelState() {
+        return mSlideState;
     }
 
     public void setPanelState(PanelState state) {
@@ -655,7 +689,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
         int panelTop = computePanelTopPosition(slideOffset);
 
         if (mDragHelper.smoothSlideViewTo(mSlideableView, mSlideableView.getLeft(), panelTop)) {
-            // TODO setAllChildrenVisible();
+            setAllChildrenVisible();
             ViewCompat.postInvalidateOnAnimation(this);
             return true;
         }
@@ -709,10 +743,8 @@ public class SlidingUpPanelLayout extends ViewGroup {
         public void onViewDragStateChanged(int state) {
             if (mDragHelper != null && mDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE) {
                 mSlideOffset = computeSlideOffset(mSlideableView.getTop());
-                // TODO applyParallaxForCurrentSlideOffset();
 
                 if (mSlideOffset == 1) {
-                    // TODO updateObscuredViewVisibility();
                     setPanelStateInternal(PanelState.EXPANDED);
                 } else if (mSlideOffset == 0) {
                     setPanelStateInternal(PanelState.COLLAPSED);
@@ -720,7 +752,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
                     setPanelStateInternal(PanelState.HIDDEN);
                     mSlideableView.setVisibility(INVISIBLE);
                 } else {
-                    // TODO updateObscuredViewVisibility();
                     setPanelStateInternal(PanelState.ANCHORED);
                 }
             }
@@ -799,13 +830,12 @@ public class SlidingUpPanelLayout extends ViewGroup {
         }
         setPanelStateInternal(PanelState.DRAGGING);
         mSlideOffset = computeSlideOffset(newTop);
-        // TODO applyParallaxForCurrentSlideOffset();
+
         dispatchOnPanelSlide(mSlideableView);
         LayoutParams lp = (LayoutParams) mMainView.getLayoutParams();
         int defaultHeight = getHeight() - getPaddingTop() - getPaddingBottom() - mPanelHeight;
 
         if (mSlideOffset <= 0 && !mOverlayContent) {
-            // expand the main view
             lp.height = mIsSlidingUp ? (newTop - getPaddingBottom()) : (getHeight() - getPaddingBottom() - mSlideableView.getMeasuredHeight() - newTop);
             if (lp.height == defaultHeight) {
                 lp.height = LayoutParams.MATCH_PARENT;
