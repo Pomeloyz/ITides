@@ -6,16 +6,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/focus_item_circle"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_marginTop="160dp"
+        android:background="@drawable/shape_circle_white_3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tv_focus_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
-        android:textColor="@android:color/black"
+        android:layout_marginTop="80dp"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/default_putting_child_item_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/focus_item_circle" />
 
     <TextView
         android:id="@+id/tv_focus_item_time"
@@ -23,33 +33,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="00:00"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/default_putting_child_item_time"
         app:layout_constraintEnd_toEndOf="@+id/tv_focus_item_title"
         app:layout_constraintStart_toStartOf="@+id/tv_focus_item_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_focus_item_title" />
-
-    <LinearLayout
-        android:id="@+id/ll_controller_root"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="150dp"
-        android:background="@color/colorPrimary"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/tv_controller_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="开始专注"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +19,7 @@ import com.bumptech.glide.request.transition.Transition;
 import java.util.ArrayList;
 import java.util.List;
 
+import oms.pomelo.itides.R;
 import oms.pomelo.itides.ui.adapters.BreathPagerAdapter;
 import oms.pomelo.itides.ui.daliy.DailyContract;
 import oms.pomelo.itides.ui.daliy.DailyInfo;
@@ -56,6 +59,8 @@ public final class FocusActivity extends BasePagerActivity implements DailyContr
 
             mRootViewPager.setAdapter(new BreathPagerAdapter<>(this, list));
         }
+
+        View controlView = LayoutInflater.from(this).inflate(R.layout.layout_focus_control, mFrameView, true);
 
         initPresenter();
     }

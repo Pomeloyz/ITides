@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 public final class RelaxActivity extends BasePagerActivity {
 
     public static void start(Activity context, int requestCode) {
-        Intent starter = new Intent(context, SleepActivity.class);
+        Intent starter = new Intent(context, RelaxActivity.class);
         context.startActivityForResult(starter, requestCode);
     }
 
